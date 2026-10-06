@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prova 3: argomento, limitazione e paragone</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F2F5FA;--ink:#18202E;--soft:#5B6678;--card:#FFFFFF;--line:#D5DCE8;--s:#D62F2F;--g:#27914A;--o:#E8800C;--obg:#FCE9D2;--v:#7A3FB5;--vbg:#EBDDF7;--bad:#C0392B;--badbg:#FBE3E0;--okbg:#DDF2E4;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121722;--ink:#EEF1F7;--soft:#9AA6BA;--card:#1B2231;--line:#2D3750;--g:#58C57B;--o:#FFA640;--obg:#4A3519;--v:#C08BF2;--vbg:#3A2652;--bad:#FF8A7A;--badbg:#4A2420;--okbg:#1E3D2A}}
+:root[data-theme="dark"]{--bg:#121722;--ink:#EEF1F7;--soft:#9AA6BA;--card:#1B2231;--line:#2D3750;--g:#58C57B;--o:#FFA640;--obg:#4A3519;--v:#C08BF2;--vbg:#3A2652;--bad:#FF8A7A;--badbg:#4A2420;--okbg:#1E3D2A}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"Atkinson Hyperlegible",Verdana,sans-serif;font-size:clamp(1.05rem,2.2vw,1.35rem);line-height:1.45}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 5vw;border-bottom:3px solid var(--line)}
+header a{color:var(--ink);text-decoration:none;font-weight:700;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:.4em .9em}
+header a:focus-visible,button:focus-visible,label:focus-within{outline:3px solid var(--v);outline-offset:2px}
+header span{color:var(--soft)}
+main{max-width:820px;margin:0 auto;padding:4vh 5vw 8vh}
+h1,h2{font-family:"Bricolage Grotesque",Georgia,sans-serif;line-height:1.1;margin:0 0 .5em}
+h1{font-size:clamp(2rem,6vw,3.4rem)}h2{font-size:clamp(1.5rem,4vw,2.2rem)}
+.bar{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:3vh}.bar i{display:block;height:100%;background:var(--v);width:0;transition:width .3s}
+.stem{font-size:clamp(1.5rem,4vw,2.4rem);font-family:"Bricolage Grotesque",Georgia,sans-serif;font-weight:800;margin:0 0 .4em}
+.stem u{text-decoration-color:var(--v);text-decoration-thickness:4px;text-underline-offset:6px}
+.q{color:var(--soft);margin:0 0 1.2em}
+.opt{display:flex;gap:12px;align-items:center;background:var(--card);border:3px solid var(--line);border-radius:16px;padding:.8em 1em;margin-bottom:12px;cursor:pointer}
+.opt input{width:1.3em;height:1.3em;accent-color:var(--v);flex:none}
+.opt.sel{border-color:var(--v);background:var(--vbg)}
+button.go{font:inherit;font-weight:700;background:var(--v);color:#fff;border:0;border-radius:14px;padding:.7em 1.6em;cursor:pointer;margin-top:1.2em}
+button.go:disabled{opacity:.4;cursor:not-allowed}
+button.alt{background:var(--card);color:var(--ink);border:3px solid var(--line)}
+.score{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;font-size:clamp(3rem,10vw,5.5rem);line-height:1;margin:.1em 0}
+.row{display:flex;align-items:center;gap:12px;margin:.5em 0}.row b{flex:0 0 11em}.row .bar{flex:1;margin:0;height:14px}
+.rev{background:var(--card);border:3px solid var(--line);border-radius:16px;padding:1em 1.2em;margin:14px 0}
+.rev p{margin:.3em 0}.no{color:var(--bad);font-weight:700}.yes{color:var(--g);font-weight:700}
+.note{background:var(--vbg);border-left:6px solid var(--v);border-radius:10px;padding:.8em 1em;margin:1em 0}
+.hide{display:none}
+</style></head><body>
+<header><a href="index.html">← Torna al menu</a><span id="cnt"></span></header>
+<main>
+<section id="intro">
+<h1>Argomento, limitazione o paragone?</h1>
+<p>12 domande a risposta multipla sui tre complementi. Scegli una risposta e vai avanti: alla fine ti diremo come è andata e ti spiegheremo gli errori.</p>
+<button class="go" id="start">Comincia</button>
+</section>
+<section id="quiz" class="hide">
+<div class="bar"><i id="pb"></i></div>
+<p class="stem" id="stem"></p><p class="q" id="q"></p>
+<div id="opts" role="radiogroup"></div>
+<button class="go" id="next" disabled>Avanti</button>
+</section>
+<section id="res" class="hide"></section>
+</main>
+<script>
+const Q=[
+{t:'par',s:'Marco è più alto <u>di Luca</u>.',q:'Che complemento è la parte sottolineata?',o:['paragone','specificazione','argomento','limitazione'],a:0,e:'Marco e Luca vengono confrontati: Marco è il primo termine, «di Luca» è il secondo termine di paragone.'},
+{t:'par',s:'Sei alto come <u>tuo fratello</u>.',q:'Che complemento è la parte sottolineata?',o:['limitazione','paragone','compagnia','argomento'],a:1,e:'«Come» introduce il secondo termine in un paragone di uguaglianza: tu e tuo fratello avete la stessa altezza.'},
+{t:'par',s:'Il treno è meno veloce <u>dell’aereo</u>.',q:'Che complemento è la parte sottolineata?',o:['specificazione','argomento','limitazione','paragone'],a:3,e:'Dopo «meno veloce» c’è il termine con cui si confronta il treno: l’aereo. È un complemento di paragone.'},
+{t:'conf',s:'Giulia è più brava <u>di Anna</u> <u>in storia</u>.',q:'Che complementi sono, nell’ordine, le parti sottolineate?',o:['paragone e limitazione','limitazione e paragone','specificazione e argomento','paragone e argomento'],a:0,e:'«Di Anna» è il secondo termine del confronto: paragone. «In storia» dice in che cosa Giulia è brava: limitazione.'},
+{t:'conf',s:'',q:'Quale domanda aiuta a trovare un complemento di paragone?',o:['Con chi o con che cosa si confronta?','Di che cosa si parla?','In che cosa vale la qualità?','A chi?'],a:0,e:'Il paragone mette a confronto due termini: cerca il secondo, quello con cui si confronta il primo.'},
+{t:'conf',s:'',q:'In quale frase c’è un complemento di limitazione?',o:['Luca è più veloce di Marco.','Luca è veloce nella corsa.','Luca parla della corsa.','Luca è alto come Marco.'],a:1,e:'«Nella corsa» è l’ambito in cui vale la qualità: limitazione. «Di Marco» e «come Marco» sono paragoni; «della corsa» è un argomento.'},
+{t:'arg',s:'Il documentario parla <u>dei vulcani</u>.',q:'Che complemento è la parte sottolineata?',o:['argomento','paragone','limitazione','specificazione'],a:0,e:'«Parlare» è un verbo di parola: di che cosa parla? Dei vulcani, che sono il tema.'},
+{t:'lim',s:'Anna è più forte <u>in matematica</u>.',q:'Che complemento è la parte sottolineata?',o:['paragone','argomento','limitazione','specificazione'],a:2,e:'C’è un «più», ma non c’è un secondo termine con cui confrontarsi. «In matematica» dice in che cosa Anna è forte: limitazione.'},
+{t:'par',s:'Oggi fa meno caldo <u>di ieri</u>.',q:'Che complemento è la parte sottolineata?',o:['specificazione','paragone','argomento','limitazione'],a:1,e:'Si confrontano oggi e ieri: «di ieri» è il secondo termine di paragone.'},
+{t:'altro',s:'Marco <u>è più alto</u> di Luca.',q:'Che cos’è «è più alto»?',o:['predicato nominale (copula + nome del predicato)','predicato verbale','predicato verbale + complemento predicativo','complemento di paragone'],a:0,e:'C’è il verbo essere: «è» è la copula e «più alto» il nome del predicato. Insieme formano un predicato nominale.'},
+{t:'altro',s:'Marco <u>diventa più alto</u> di Luca.',q:'Che cosa sono «diventa» e «più alto»?',o:['predicato verbale + complemento predicativo del soggetto','predicato nominale','predicato verbale + complemento oggetto','copula + nome del predicato'],a:0,e:'«Diventare» non è il verbo essere: è predicato verbale. «Più alto» dice com’è il soggetto: complemento predicativo. «Di Luca» resta il paragone.'},
+{t:'conf',s:'<u>Quanto a pazienza</u>, Marta è più calma <u>di me</u>.',q:'Che complementi sono, nell’ordine, le parti sottolineate?',o:['limitazione e paragone','paragone e limitazione','argomento e paragone','limitazione e argomento'],a:0,e:'«Quanto a» è una locuzione di limitazione: il discorso vale per la pazienza. «Di me» è il secondo termine del confronto: paragone.'}
+];
+const AREA={arg:['Argomento','var(--o)'],lim:['Limitazione','var(--v)'],conf:['Confronto','var(--ink)'],altro:['Analisi del predicato','var(--p,#1F5FD1)'],mix:['Altri complementi','var(--g)'],par:['Paragone','var(--o)']};
+let i=0,ans=[],ord=[];
+const $=id=>document.getElementById(id);
+function shuffle(a){a=a.slice();for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]]}return a}
+function show(id){['intro','quiz','res'].forEach(x=>$(x).classList.toggle('hide',x!==id))}
+function render(){
+ const d=Q[i];$('stem').innerHTML=d.s||d.q;$('q').textContent=d.s?d.q:'';$('cnt').textContent='Domanda '+(i+1)+' di '+Q.length;
+ $('pb').style.width=(i/Q.length*100)+'%';
+ ord[i]=ord[i]||shuffle(d.o.map((t,k)=>k));
+ $('opts').innerHTML='';
+ ord[i].forEach(k=>{const l=document.createElement('label');l.className='opt';l.innerHTML='<input type="radio" name="r"><span></span>';l.querySelector('span').textContent=d.o[k];
+  l.querySelector('input').onchange=()=>{ans[i]=k;[...$('opts').children].forEach(c=>c.classList.remove('sel'));l.classList.add('sel');$('next').disabled=false};
+  $('opts').appendChild(l)});
+ $('next').disabled=true;$('next').textContent=i==Q.length-1?'Vedi il risultato':'Avanti';
+}
+$('start').onclick=()=>{i=0;ans=[];ord=[];show('quiz');render()};
+$('next').onclick=()=>{if(i<Q.length-1){i++;render()}else result()};
+function result(){
+ show('res');$('cnt').textContent='Risultato';
+ const ok=Q.map((d,k)=>ans[k]===d.a),n=ok.filter(Boolean).length;
+ const by={};Q.forEach((d,k)=>{by[d.t]=by[d.t]||[0,0];by[d.t][1]++;if(ok[k])by[d.t][0]++});
+ let msg=n>=11?'Ottimo! Distingui bene il fumetto dalla cornice.':n>=8?'Bene! Hai capito l’idea: ripassa gli errori qui sotto e sarai sicuro.':n>=5?'Sei a metà strada: rivedi le slide e riprova la prova.':'Per ora fai ancora confusione: rivedi le slide con calma e poi riprova.';
+ let h='<h1>Come è andata</h1><p class="score">'+n+' / '+Q.length+'</p><p>'+msg+'</p><h2>Per tipo di domanda</h2>';
+ Object.keys(by).forEach(t=>{const [a,b]=by[t];h+='<div class="row"><b>'+AREA[t][0]+'</b><div class="bar"><i style="width:'+(a/b*100)+'%;background:'+AREA[t][1]+'"></i></div><span>'+a+'/'+b+'</span></div>'});
+ const wr=Q.map((d,k)=>k).filter(k=>!ok[k]);
+ if(wr.length){
+  h+='<div class="note"><b>Consiglio.</b> ';
+  const c={arg:0,lim:0,par:0};wr.forEach(k=>{if(c[Q[k].t]!==undefined)c[Q[k].t]++});const mx=Math.max(c.arg,c.lim,c.par);
+  const T={arg:'Ripassa l’argomento: chiediti <i>di che cosa si parla?</i> e cerca un verbo di parola o di pensiero.',lim:'Ripassa la limitazione: cerca una qualità e chiediti <i>in che cosa?</i>',par:'Ripassa il paragone: cerca un «più», un «meno» o un «come» e trova il secondo termine con cui si confronta.'};
+  const top=Object.keys(c).filter(z=>c[z]==mx&&mx>0);
+  h+=top.length==1?T[top[0]]:'Ripassa la differenza tra i tre complementi: l’argomento dice di che cosa si parla, la limitazione dice dove vale la qualità, il paragone dice con che cosa ci si confronta.';
+  h+='</div><h2>Rivediamo gli errori</h2>';
+  wr.forEach(k=>{const d=Q[k];h+='<div class="rev"><p><b>'+(d.s||d.q)+'</b></p>'+(d.s?'<p>'+d.q+'</p>':'')+'<p class="no">La tua risposta: '+d.o[ans[k]]+'</p><p class="yes">Risposta giusta: '+d.o[d.a]+'</p><p>'+d.e+'</p></div>'});
+ }else h+='<div class="note">Nessun errore: complimenti!</div>';
+ h+='<button class="go" id="again">Rifai la prova</button> <a class="go alt" href="index.html" style="display:inline-block;text-decoration:none;font-weight:700;border-radius:14px;padding:.7em 1.6em;margin-left:8px">Torna al menu</a>';
+ $('res').innerHTML=h;$('again').onclick=()=>{i=0;ans=[];ord=[];show('quiz');render()};scrollTo(0,0);
+}
+</script></body></html>
