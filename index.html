@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu delle Prove e Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F2F5FA;
+            --ink: #18202E;
+            --soft: #5B6678;
+            --card: #FFFFFF;
+            --line: #D5DCE8;
+            --v: #7A3FB5;
+            --vbg: #EBDDF7;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #121722;
+                --ink: #EEF1F7;
+                --soft: #9AA6BA;
+                --card: #1B2231;
+                --line: #2D3750;
+                --v: #C08BF2;
+                --vbg: #3A2652;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--ink);
+            font-family: 'Atkinson Hyperlegible', Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-family: 'Bricolage Grotesque', Georgia, sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: var(--soft);
+            font-size: 1.1rem;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .card {
+            background: var(--card);
+            border: 3px solid var(--line);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--v);
+        }
+
+        .card h2 {
+            font-family: 'Bricolage Grotesque', Georgia, sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            color: var(--soft);
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 16px;
+            background-color: var(--v);
+            color: #ffffff;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Menu delle Prove</h1>
+        <p>Scegli una prova o un esercizio per iniziare.</p>
+    </header>
+
+    <main class="grid-container">
+
+        <!-- Card 1 -->
+        <a href="esercizi.html" class="card">
+            <div>
+                <h2>Esercizi</h2>
+                <p>12 domande a risposta multipla su argomento e limitazione.</p>
+            </div>
+            <span class="btn">Apri Esercizi</span>
+        </a>
+
+        <!-- Card 2 -->
+        <a href="prova-argomento-limitazione.html" class="card">
+            <div>
+                <h2>Prova 1: Argomento e Limitazione</h2>
+                <p>Prova standard su argomento e limitazione.</p>
+            </div>
+            <span class="btn">Inizia Prova 1</span>
+        </a>
+
+        <!-- Card 3 -->
+        <a href="prova-argomento-limitazione-2.html" class="card">
+            <div>
+                <h2>Prova 2: Argomento e Limitazione</h2>
+                <p>Seconda prova con 12 nuovi casi pratici.</p>
+            </div>
+            <span class="btn">Inizia Prova 2</span>
+        </a>
+
+        <!-- Card 4 -->
+        <a href="prova-argomento-limitazione-paragone.html" class="card">
+            <div>
+                <h2>Prova 3: Tre Complementi</h2>
+                <p>12 domande su argomento, limitazione e paragone.</p>
+            </div>
+            <span class="btn">Inizia Prova 3</span>
+        </a>
+
+    </main>
+
+</body>
+</html>
